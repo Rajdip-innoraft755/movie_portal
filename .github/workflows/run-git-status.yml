@@ -1,0 +1,40 @@
+name: Run Git Status on Employee Portal Merge
+
+on:
+  repository_dispatch:
+    types: [employee_portal_merged]
+
+jobs:
+  run-git-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Movie Portal Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Display Trigger Information
+        run: |
+          echo "🔔 Triggered by employee-portal repository merge"
+          echo "Source Repository: ${{ github.event.client_payload.repository }}"
+          echo "Source Branch: ${{ github.event.client_payload.ref }}"
+          echo "Source Commit SHA: ${{ github.event.client_payload.sha }}"
+          echo "---"
+      
+      - name: Run Git Status
+        run: |
+          echo "📊 Running git status for movie-portal..."
+          git status
+          echo "---"
+          echo "📝 Git Status Complete"
+      
+      - name: Additional Git Information
+        run: |
+          echo "Current Branch:"
+          git branch --show-current
+          echo ""
+          echo "Recent Commits:"
+          git log --oneline -5
+          echo ""
+          echo "Remote Information:"
+          git remote -v
